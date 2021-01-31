@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: carpooldb
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    volumes:
+      - carpool-data:/var/lib/pgadmin
+    ports:
+      - "1234:80"
+volumes:
+  carpool-data:
