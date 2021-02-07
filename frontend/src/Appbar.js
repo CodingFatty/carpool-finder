@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { AuthContext } from "./context";
 import Login from './Login';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ButtonAppBar() {
     const classes = useStyles();
-
+    const authContext = useContext(AuthContext);
     const [open, setOpen] = React.useState(false);
 
     const handleOpen = () => {
@@ -38,6 +39,10 @@ export default function ButtonAppBar() {
     const handleClose = () => {
         setOpen(false);
     };
+
+    const logoutHandler = () => {
+        authContext.logout();
+    }
 
     return (
         <div className={classes.root}>
@@ -49,13 +54,14 @@ export default function ButtonAppBar() {
                     <Typography variant="h6" className={classes.title}>
                         Carpool Finder
                 </Typography>
-                    <Button color="inherit" onClick={handleOpen}>Login</Button>
+                    {!authContext.isLogged && (<Button color="inherit" onClick={handleOpen}>Login</Button>)}
+                    {authContext.isLogged && (<Button color="inherit" onClick={logoutHandler}>Logout</Button>)}
                     <Modal
                         className={classes.modal}
                         open={open}
                         onClose={handleClose}
                     >
-                        <Login />
+                        <Login closedModal={handleClose}/>
                     </Modal>
                     {/* <Button color="inherit">Sign up</Button> */}
                 </Toolbar>

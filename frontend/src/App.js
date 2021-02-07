@@ -1,25 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from 'react';
+import { AuthContext } from './context';
+import Appbar from './Appbar';
+import Main from './Main';
 
-function App() {
+let logoutTimer;
+
+export default function App() {
+  const [token, setToken] = useState(null);
+  const [tokenExp, setTokenExp] = useState();
+  
+  const login = (token, expiredTime) => {
+    setToken(token);
+    setTokenExp(expiredTime)
+
+    localStorage.setItem(
+      'cpUserData',
+      JSON.stringify({
+        token,
+        expiredTime: expiredTime
+      })
+    );
+  }
+  const logout = () => {
+    setToken(null);
+    setTokenExp(null);
+    localStorage.removeItem('cpUserData');
+  }
+
+  useEffect(() => {
+    const storedLocalData = JSON.parse(localStorage.getItem('cpUserData'));
+
+    if (storedLocalData && storedLocalData.token && new Date(storedLocalData.expiredTime) > new Date()) {
+      console.log(new Date(storedLocalData.expiredTime))
+      login(storedLocalData.token, storedLocalData.expiredTime)
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (token && tokenExp) {
+      const expiringTime = tokenExp - new Date().getTime()
+      logoutTimer = setTimeout(logout, expiringTime)
+    } else {
+      clearTimeout(logoutTimer)
+    }
+  }, [token, tokenExp])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthContext.Provider value={{ isLogged: !!token, login: login, logout: logout }}>
+      <Appbar />
+      <Main />
+    </AuthContext.Provider >
   );
 }
 
-export default App;

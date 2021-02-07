@@ -16,37 +16,32 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Login() {
+export default function Login({ closedModal }) {
     const classes = useStyles();
     const authContext = useContext(AuthContext);
 
-    let token = ""
-    let id = ""
+    // let token = ""
+    // let id = ""
     const responseFacebook = (response) => {
         console.log(response);
-        token = response.accessToken
-        id = response.id
+        let token = response.accessToken
+        let expiredTime = new Date().getTime() + response.expiresIn * 1000
+
+        // id = response.id
 
         //  custom token from django
         // const loginResponse = {
         //     token
         // };
-        authContext.login(token)
-        // result();
+        authContext.login(token, expiredTime)
+        closedModal()
     }
 
-    const result = () => {
-        fetch(`https://graph.facebook.com/${id}/groups?access_token=${token}`)
-            .then(res => res.json())
-            .then(data => console.log(data))
-    }
-    // const loginHandler = () => {
-
+    // const result = () => {
+    //     fetch(`https://graph.facebook.com/${id}/groups?access_token=${token}`)
+    //         .then(res => res.json())
+    //         .then(data => console.log(data))
     // }
-
-    const logoutHandler = () => {
-        authContext.logout();
-    }
 
     return (
         <div className={classes.paper}>
