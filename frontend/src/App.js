@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { AuthContext } from './context';
-import Appbar from './Appbar';
+import MenuBar from './MenuBar';
 import Main from './Main';
 
 let logoutTimer;
@@ -47,7 +47,7 @@ export default function App() {
 
   return (
     <AuthContext.Provider value={{ isLogged: !!token, login: login, logout: logout }}>
-      <Appbar />
+      <MenuBar />
       <Main />
     </AuthContext.Provider >
   );

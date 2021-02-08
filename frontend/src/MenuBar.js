@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function ButtonAppBar() {
+export default function MenuBar() {
     const classes = useStyles();
     const authContext = useContext(AuthContext);
     const [open, setOpen] = React.useState(false);
