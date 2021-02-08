@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
+import Search from './search';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,6 +32,7 @@ export default function ButtonAppBar() {
                     <Divider orientation="vertical" />
                     Offering
                 </Grid>
+                <Search />
             </Container>
         // {/* </> */}
     );
